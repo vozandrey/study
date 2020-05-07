@@ -17,7 +17,10 @@ const logInForm = document.querySelector('#logInForm');
 const loginInput = document.querySelector('#login');
 const userName = document.querySelector('.user-name');
 const buttonOut = document.querySelector('.button-out');
-
+const cardsRestaurants = document.querySelector('.cards-restaurants');
+const containerPromo = document.querySelector('.container-promo');
+const restaurants = document.querySelector('.restaurants');
+const menu = document.querySelector('.menu');
 
 let login = localStorage.getItem('delivery-auth');
 
@@ -80,3 +83,43 @@ function checkAuth() {
   }
 }
 checkAuth();
+
+function createCartRestaurant() {
+  const card = `
+  <a class="card card-restaurant">
+    <img src="img/gusi-lebedi/preview.jpg" alt="image" class="card-image"/>
+    <div class="card-text">
+      <div class="card-heading">
+          <h3 class="card-title">Гуси Лебеди</h3>
+          <span class="card-tag tag">75 мин</span>
+      </div>
+      <div class="card-info">
+        <div class="rating">
+            4.5
+        </div>
+        <div class="price">От 1 000 ₽</div>
+        <div class="category">Русская кухня</div>
+      </div>
+    </div>
+  </a>
+`;
+
+  cardsRestaurants.insertAdjacentHTML('beforeend', card);
+}
+
+createCartRestaurant();
+createCartRestaurant();
+createCartRestaurant();
+
+function openGoods(event) {
+  const target = event.target;
+  const restaurant = target.closest('.card-restaurant');
+
+  if (restaurant){
+    containerPromo.classList.add('.hide');
+    restaurants.classList.add('.hide');
+    menu.classList.remove('.hide');
+  }
+}
+
+cardsRestaurants.addEventListener('click', openGoods);

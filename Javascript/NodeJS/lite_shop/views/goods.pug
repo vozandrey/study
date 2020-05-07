@@ -1,0 +1,28 @@
+include blocks/header
+
+
+div(class="wrap")
+    div(class="content")
+        header(class="site-header")
+            include blocks/site_header
+
+        div(class="container")
+            div(class="row")
+                div(class="col col-md-12")
+                    h2(class="panel-title") #{goods[0]['name']}
+                div(class="col col-md-4")
+                    img(
+                        src="images/product_images/" + goods[0]['image']
+                        class="goods-big-image"
+                    )
+                div(class="col col-md-8")
+                    p #{goods[0]['description']}
+                    span(class="success") Цена: #{goods[0]['cost'].toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ')} uah
+                    br
+                    button(
+                        class="btn btn-success add-to-cart"
+                        data-goods_id=goods[0]['id']
+                    ) Добавить в корзину
+        include blocks/nav
+include blocks/footer
+include blocks/scripts_footer

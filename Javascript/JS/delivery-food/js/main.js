@@ -1,15 +1,8 @@
+'use strict';
+
 const cartButton = document.querySelector("#cart-button");
 const modal = document.querySelector(".modal");
 const close = document.querySelector(".close");
-
-cartButton.addEventListener("click", toggleModal);
-close.addEventListener("click", toggleModal);
-
-function toggleModal() {
-  modal.classList.toggle("is-open");
-}
-
-//day 1
 const buttonAuth = document.querySelector('.button-auth');
 const modalAuth = document.querySelector('.modal-auth');
 const closeAuth = document.querySelector('.close-auth');
@@ -21,8 +14,14 @@ const cardsRestaurants = document.querySelector('.cards-restaurants');
 const containerPromo = document.querySelector('.container-promo');
 const restaurants = document.querySelector('.restaurants');
 const menu = document.querySelector('.menu');
+const logo = document.querySelector('.logo');
+const cardsMenu = document.querySelector('.cards-menu');
 
 let login = localStorage.getItem('delivery-auth');
+
+function toggleModal() {
+  modal.classList.toggle("is-open");
+}
 
 function toggleModalAuth() {
   loginInput.style.borderColor = '';
@@ -82,7 +81,6 @@ function checkAuth() {
     nonAuthorized();
   }
 }
-checkAuth();
 
 function createCartRestaurant() {
   const card = `
@@ -107,19 +105,59 @@ function createCartRestaurant() {
   cardsRestaurants.insertAdjacentHTML('beforeend', card);
 }
 
-createCartRestaurant();
-createCartRestaurant();
-createCartRestaurant();
+function createCardGood(){
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.insertAdjacentHTML('beforeend', `
+      <img src="img/gusi-lebedi/preview.jpg" alt="image" class="card-image"/>
+      <div class="card-text">
+        <div class="card-heading">
+            <h3 class="card-title">Гуси Лебеди</h3>
+            <span class="card-tag tag">75 мин</span>
+        </div>
+        <div class="card-info">
+          <div class="rating">
+              4.5
+          </div>
+          <div class="price">От 1 000 ₽</div>
+          <div class="category">Русская кухня</div>
+        </div>
+      </div>
+    `);
+  cardsMenu.insertAdjacentElement('beforeend', card);
+}
 
 function openGoods(event) {
   const target = event.target;
   const restaurant = target.closest('.card-restaurant');
 
-  if (restaurant){
-    containerPromo.classList.add('.hide');
-    restaurants.classList.add('.hide');
-    menu.classList.remove('.hide');
+  if (!login){
+    toggleModalAuth();
+  } else if (restaurant){
+    cardsMenu.textContent = '';
+    containerPromo.classList.add('hide');
+    restaurants.classList.add('hide');
+    menu.classList.remove('hide');
+
+    createCardGood();
+    createCardGood();
+    createCardGood();
   }
 }
 
+
+cartButton.addEventListener("click", toggleModal);
+close.addEventListener("click", toggleModal);
 cardsRestaurants.addEventListener('click', openGoods);
+
+logo.addEventListener('click', function () {
+  containerPromo.classList.remove('hide');
+  restaurants.classList.remove('hide');
+  menu.classList.add('hide');
+})
+
+checkAuth();
+
+createCartRestaurant();
+createCartRestaurant();
+createCartRestaurant();

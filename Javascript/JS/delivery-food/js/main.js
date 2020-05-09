@@ -131,9 +131,11 @@ function openGoods(event) {
   const target = event.target;
   const restaurant = target.closest('.card-restaurant');
 
-  if (!login){
-    toggleModalAuth();
-  } else if (restaurant){
+  if (restaurant){
+    if (!login) {
+      toggleModalAuth();
+      return;
+    }
     cardsMenu.textContent = '';
     containerPromo.classList.add('hide');
     restaurants.classList.add('hide');

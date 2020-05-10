@@ -1,0 +1,42 @@
+include blocks/header
+
+
+div(class="wrap")
+    div(class="content")
+        header(class="site-header")
+            include blocks/site_header_order
+
+        div(class="container")
+            div(class="row")
+                div(class="col col-md-12")
+                    h3(class="cart-header") Cart
+                    div(id="cart-nav")
+                div(class="col col-md-12")
+                    h3 Create order
+                div(class="col col-md-6")
+                    form#lite-shop-order(action='')
+                        .form-group
+                            label(for='username') Name
+                            input#username.form-control(type='text' placeholder='Enter your name')
+                        .form-group
+                            label(for='phone') Phone
+                            input#phone.form-control(type='text' placeholder='+380509876543')
+                        .form-group
+                            label(for='email') Email
+                            input#email.form-control(type='text' placeholder='mail@example.com')
+                        .form-group
+                            label(for='address') Address
+                            textarea#address.form-control(placeholder='Where are you?')
+                        .form-group
+                            .form-check
+                                input#rule.form-check-input(type='checkbox')
+                                label.form-check-label(for='rule')
+                                    span Terms and conditions
+                        .form-group.text-right
+                            button.btn.btn-primary(type='submit') Finish order
+
+    //include blocks/nav
+
+    include blocks/footer
+    include blocks/scripts_footer
+    script(src="js/order.js")

@@ -12,6 +12,7 @@ app.use(express.json());
  */
 app.set('view engine', 'pug');
 
+const nodemailer = require('nodemailer');
 
 /**
  * настраиваем модуль mysql
@@ -132,3 +133,62 @@ app.post('/get-goods-info', function (request, response) {
     }
 });
 
+app.post('/finish-order', function (request, response) {
+    console.log(request.body);
+    if (request.body.key.length != 0){
+        let key = Object.keys(request.body.key);
+        connection.query(
+            'SELECT id, name, cost FROM goods WHERE id IN (' + key.join(',') + ')',
+            function (error, result) {
+                if (error) throw error;
+                console.log(result);
+                console.log('order now');
+                sendMail(request.body, result).catch(console.error);
+                response.send('1');
+        });
+    } else{
+        response.send('0');
+    }
+});
+
+async function sendMail(data, result) {
+    let res = '<h2>Order in lite shop</h2>';
+    let total = 0;
+    for (let i = 0; i < result.length; i++){
+        res += `<p>${result[i][`name`]} - ${data.key[result[i]['id']]} - ${result[i]['cost'] * data.key[result[i]['id']]} uah</p>`;
+        total+= result[i]['cost'] * data.key[result[i]['id']];
+    }
+    console.log(res);
+    res += '<hr>';
+    res += `Total ${total} uah`;
+    res += `<hr>Phone: ${data.phone}`;
+    res += `<hr>Username: ${data.username}`;
+    res += `<hr>Address: ${data.address}`;
+    res += `<hr>Email: ${data.email}`;
+
+    let testAccount = await nodemailer.createTestAccount();
+
+    // create reusable transporter object using the default SMTP transport
+    let transporter = nodemailer.createTransport({
+        host: "smtp.ethereal.email",
+        port: 587,
+        secure: false, // true for 465, false for other ports
+        auth: {
+            user: testAccount.user, // generated ethereal user
+            pass: testAccount.pass // generated ethereal password
+        }
+    });
+
+    let mailOption = {
+      from: '<vozandrey2001@gmail.com>',
+      to : "vozandrey2001@gmail.com," + data.email,
+      subject: 'Lite shop order',
+      text: 'Hello world',
+      html: res,
+    };
+
+    let info = await transporter.sendMail(mailOption);
+    console.log("MessageSent: %s", info.messageId);
+    console.log("PreviewSent: %s", nodemailer.getTestMessageUrl(info));
+    return true;
+}

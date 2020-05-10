@@ -25,30 +25,40 @@ let connection = mysql.createConnection({
 
 connection.connect();
 
-app.listen(3000, function () {
-    console.log('node work on port 3000');
+app.listen(8080, function () {
+    console.log('node work on port 8080');
 });
 
 app.get('/', function (request, response) {
-    connection.query(
-        'SELECT * FROM goods',
-        function (error, result) {
-            if(error) throw error;
-            //console.log(result);
-            let goods = {};
-            for (let i = 0; i < result.length; i++) {
-                goods[result[i]['id']] = result[i];              
+    let cat = new Promise(function (resolve, reject) {
+        connection.query(
+           "SELECT id, name, cost, image, category FROM" +
+            "(SELECT id, name, cost, image, category, if(if(@curr_category != category, " +
+            "@curr_category := category, '' ) != ''," +
+            "@k := 0, @k := @k + 1) as ind FROM goods, ( SELECT @curr_category := '' ) v ) " +
+            "goods WHERE ind < 3",
+           function (error, result, fields) {
+                if (error) return reject(error);
+                resolve(result);
+           }
+        );
+    });
+    let catDescription = new Promise(function (resolve, reject) {
+        connection.query(
+            "SELECT * FROM category",
+            function (error, result, fields) {
+                if (error) return reject(error);
+                resolve(result);
             }
-
-            //console.log(goods); 
-            //console.log(JSON.parse(JSON.stringify(goods)));
-            response.render('main', {
-                foo : 4,
-                bar : 7,
-                goods : JSON.parse(JSON.stringify(goods)),
-            });     
-        }
-    );
+        );
+    });
+    Promise.all([cat, catDescription]).then(function (value) {
+        console.log(value[1]);
+        response.render('index', {
+            goods: JSON.parse(JSON.stringify(value[0])),
+            cat: JSON.parse(JSON.stringify(value[1]))
+        })
+    });
 });
 
 app.get('/cat', function (request, response) {
@@ -90,6 +100,10 @@ app.get('/goods', function (request, response) {
         if (error) throw error;
         response.render('goods', {goods: JSON.parse(JSON.stringify(result))});
     });
+});
+
+app.get('/order', function (request, response) {
+        response.render('order');
 });
 
 app.post('/get-category-list', function (request, response) {

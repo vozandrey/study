@@ -48,11 +48,11 @@ function showCart(data) {
         out += `<tr><td><button class="btn btn-danger cart-minus" data-goods_id="${key}">-</button></td>`;
         out += `<td>${cart[key]}</td>`;
         out += `<td><button class="btn btn-success cart-plus" data-goods_id="${key}">+</button></td>`;
-        out += `<td>${data[key]['cost'] * cart[key]} uah</td>`;
+        out += `<td>${formatPrice(data[key]['cost'] * cart[key])} uah</td>`;
         out += '</tr>'
         total += cart[key] * data[key]['cost'];
     }
-    out += `<tr><td colspan="3">Total: </td><td>${total} uah</td></tr>`
+    out += `<tr><td colspan="3">Total: </td><td>${formatPrice(total)} uah</td></tr>`;
     out += '</tbody></table>';
 
     document.querySelector('#cart-nav').innerHTML = out;
@@ -83,4 +83,8 @@ function showCart(data) {
 
 function updateLocalStorageCart() {
     localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+function formatPrice(price) {
+    return price.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ');
 }

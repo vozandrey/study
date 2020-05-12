@@ -1,0 +1,21 @@
+body {
+    background: cornsilk;
+}
+
+footer {
+    width: 80%;
+    margin-left: 10%;
+}
+
+.user-profile-photo {
+    width: 150px;
+    height: 150px;
+}
+
+.song-playlist-work-title {
+    float: right;
+}
+
+.song-playlist {
+    background: grey;
+}

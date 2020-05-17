@@ -18,6 +18,7 @@ app.set('views', 'views');
 
 app.use(express.urlencoded({ extended: true }))  //считывание body request
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
 
 app.use(todoRoutes);
 

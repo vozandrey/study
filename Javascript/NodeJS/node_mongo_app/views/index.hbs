@@ -1,9 +1,9 @@
 <h2>Todos page</h2>
 
 {{#if todos.length}}
-<ul>
+<ul class="todos-list">
     {{#each todos}}
-        <li class="todo">
+        <li class="todo" data-todo-id="{{_id}}">
             <form action="/complete" method="POST">
                 <label>
                     {{#if completed}}
@@ -16,7 +16,7 @@
                     
                     <input type="hidden" value="{{_id}}" name="id" />
                     <div>
-                        <button type="button" class="btn btn-small btn-delete-todo" todo-id="{{_id}}">Delete</button>
+                        <button type="button" class="btn btn-small btn-delete-todo" data-todo-id="{{_id}}">Delete</button>
                         <button type="submit" class="btn btn-small">Save</button>
                     </div>
 
